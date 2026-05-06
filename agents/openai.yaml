@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image2HTML"
+  short_description: "Rebuild images and UI mockups as verified HTML."
+  default_prompt: "Convert this image into a faithful, responsive HTML/CSS/JS implementation and verify it with browser screenshots."
