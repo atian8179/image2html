@@ -1,61 +1,125 @@
 # image2html
 
-`image2html` is a Codex skill for rebuilding high-quality images, AI-generated UI mockups, screenshots, and visual references as faithful, responsive HTML/CSS/JS implementations.
+`image2html` 是一个 Codex Skill，用来把高质量图片、AI 生成的 UI 设计图、截图、落地页 mockup、App 界面或游戏画面，尽量精准地还原成可运行的 HTML/CSS/JS。
 
-It is designed for one job:
+> 核心理念：图片不是灵感板，而是验收标准。先拆图，再编码，再用浏览器截图对比，直到实现结果接近原图。
 
-> Treat the image as the acceptance target, rebuild it as real web UI, verify it in a browser, and iterate until the implementation visually matches the reference.
+English summary: `image2html` helps Codex rebuild visual references as faithful, responsive HTML/CSS/JS, with browser screenshot verification as part of the workflow.
 
-## Why This Exists
+## 为什么需要它
 
-AI image generation can produce beautiful UI concepts, but turning those images into working front-end code is often imprecise. A model may capture the mood while missing the grid, spacing, typography, component hierarchy, or responsive behavior.
+AI 很容易生成一张“看起来很漂亮”的设计图，但把这张图变成真正可运行的前端页面时，常见问题很多：
 
-`image2html` gives Codex a disciplined workflow for image-to-HTML reconstruction:
+- 布局比例不像原图
+- 字体层级和间距跑偏
+- 色彩氛围变了
+- 图片里的控件没有真实交互
+- 移动端响应式没有验收
+- 只做了“差不多”的页面，没有截图对比
 
-- inspect the visual reference before coding
-- extract layout, typography, color, and component structure
-- implement semantic HTML/CSS/JS or adapt to an existing front-end stack
-- infer simple interactions from the design
-- verify with desktop and mobile browser screenshots
-- report known fidelity gaps instead of hand-waving them away
+`image2html` 给 Codex 增加了一套更严谨的工作流：
 
-## Use Cases
+1. 先分析图片里的布局、颜色、字体、组件和交互暗示
+2. 再选择静态 HTML 或现有前端框架实现
+3. 抽取设计 token 和组件结构
+4. 实现真实按钮、状态、热点、滑杆、弹窗等交互
+5. 用桌面端和移动端浏览器截图验收
+6. 根据截图差异继续微调
 
-Use this skill when you want to convert any of these into front-end code:
+## 真实案例：Kids Game
 
-- AI-generated UI design images
-- product landing page mockups
-- mobile app screen concepts
-- dashboard screenshots
-- editor or tool interface screenshots
-- poster-like hero sections
-- design references from image generation tools
-- static product UI concepts that need interactive HTML
+下面这个案例来自 `D:\kidsgame` 项目。输入是一张 AI 生成的儿童游戏地图设计图，主题是“AI星球修复计划”。目标不是重新画一张类似的图，而是把它变成可运行、可点击、可验证的 HTML 游戏界面。
 
-Example requests:
+### 输入：AI 生成的游戏界面参考图
+
+![Kids Game reference image](assets/cases/kidsgame/reference.png)
+
+这张图已经包含很强的视觉方向：
+
+- 儿童向游戏地图
+- 星球/关卡路线
+- 顶部 HUD 状态条
+- 左侧开始挑战按钮
+- 右上角图鉴和设置
+- 底部任务、背包入口
+- 机器人角色和 6 个关卡点
+
+但它本质上还是一张扁平图片，不能点击、不能响应、不能进入真实游戏流程。
+
+### 输出：HTML 还原后的桌面端截图
+
+![Kids Game desktop HTML rebuild](assets/cases/kidsgame/desktop-check.png)
+
+`image2html` 引导 Codex 采用“高保真视觉层 + 语义化交互热点”的策略：
+
+- 保留原图作为主视觉层，最大程度维持视觉还原度
+- 在关卡、开始挑战、任务、背包、图鉴、设置等位置叠加真实按钮
+- 用 HTML dialog 实现关卡弹窗
+- 用 JS 管理关卡状态、反馈、按钮状态和快捷关闭
+- 用 CSS 添加星光、路线流动、关卡光环等轻量动效
+- 用浏览器截图确认桌面端比例和视觉位置
+
+### 输出：移动端截图
+
+![Kids Game mobile HTML rebuild](assets/cases/kidsgame/mobile-check.png)
+
+移动端验收的重点不是把 16:9 游戏地图硬塞满屏幕，而是确认：
+
+- 游戏画面保持比例
+- 没有横向布局错误
+- 关键点击区域仍然存在
+- 页面在手机视口下可展示和测试
+- 后续可以继续扩展为横屏游戏体验
+
+### 这个案例体现的价值
+
+`image2html` 的价值不是“把图片转成网页”这么简单，而是把一张视觉概念图变成一个可以继续开发的前端基础：
+
+| 阶段 | 普通做法 | 使用 image2html |
+|---|---|---|
+| 视觉理解 | 凭感觉照着写 | 先做视觉审计，拆布局/颜色/组件 |
+| 还原策略 | 重新画一个类似页面 | 根据素材情况选择高保真图层或组件化重建 |
+| 交互 | 图片不可点击 | 叠加真实按钮、弹窗、状态反馈 |
+| 验收 | 主观说“差不多” | 桌面/移动端截图对比 |
+| 交付 | 一次性 demo | 可继续迭代的 HTML/CSS/JS |
+
+这个 Kids Game 案例尤其适合说明：当只有一张扁平 PNG、没有分层设计稿时，`image2html` 仍然可以先交付一个高保真的可交互原型，让团队快速验证玩法入口、热点区域、弹窗流程和响应式策略。
+
+## 适用场景
+
+你可以用 `image2html` 处理：
+
+- AI 生成的 UI 设计图
+- 产品落地页 mockup
+- 移动 App 概念图
+- 游戏界面概念图
+- Dashboard 截图
+- 编辑器/工具类界面
+- 海报式 hero 页面
+- 需要快速变成 HTML 原型的视觉参考图
+
+示例提示词：
 
 ```text
-Use image2html to convert this generated landing page image into a responsive HTML page.
+使用 image2html，把这张 AI 生成的落地页图还原成响应式 HTML 页面。
 ```
 
 ```text
-Use image2html on this dashboard screenshot and rebuild it in the current React project.
+使用 image2html，把这个 dashboard 截图还原到当前 React 项目里，并做桌面端和移动端截图验收。
 ```
 
 ```text
-Use image2html to recreate this mobile app mockup as a static HTML prototype, then verify it at iPhone viewport size.
+使用 image2html，把这个儿童游戏界面图转成可点击的 HTML 原型，关卡和开始按钮需要能弹出交互。
 ```
 
-## What It Produces
+## 它会产出什么
 
-Depending on the project context, Codex will produce either:
+根据当前项目环境，Codex 会选择：
 
-- a static HTML/CSS/JS implementation, or
-- code inside an existing front-end app such as React, Vue, Svelte, Next.js, or Vite.
+- 独立静态 HTML/CSS/JS 页面
+- 或者在现有 React、Vue、Svelte、Next.js、Vite 等项目中实现
 
-The skill favors the smallest implementation that can faithfully demonstrate the design.
-
-For standalone work, the included starter template lives at:
+当没有现成前端项目时，可以使用内置 starter：
 
 ```text
 assets/starter/
@@ -64,33 +128,33 @@ assets/starter/
 └─ script.js
 ```
 
-## Installation
+## 安装方式
 
-### Option 1: Clone Into Your Codex Skills Directory
+### 安装到 Codex Skills 目录
 
-On Windows PowerShell:
+Windows PowerShell：
 
 ```powershell
 git clone https://github.com/atian8179/image2html.git $env:USERPROFILE\.codex\skills\image2html
 ```
 
-On macOS or Linux:
+macOS / Linux：
 
 ```bash
 git clone https://github.com/atian8179/image2html.git ~/.codex/skills/image2html
 ```
 
-Then restart Codex or open a new Codex session so the skill can be discovered.
+安装后，重启 Codex 或新开一个会话，让 Skill 被自动发现。
 
-### Option 2: Use From A Local Path
+### 从本地路径直接使用
 
-If you do not want to install it globally, clone the repo anywhere and reference it directly in your prompt:
+如果你暂时不想安装到全局 skills 目录，也可以直接在提示词里引用路径：
 
 ```text
-Use the skill at /path/to/image2html to rebuild this image as HTML.
+使用 /path/to/image2html 这个 skill，把这张图还原成 HTML。
 ```
 
-## Repository Structure
+## 仓库结构
 
 ```text
 image2html/
@@ -98,6 +162,11 @@ image2html/
 ├─ agents/
 │  └─ openai.yaml
 ├─ assets/
+│  ├─ cases/
+│  │  └─ kidsgame/
+│  │     ├─ reference.png
+│  │     ├─ desktop-check.png
+│  │     └─ mobile-check.png
 │  └─ starter/
 │     ├─ index.html
 │     ├─ styles.css
@@ -107,65 +176,43 @@ image2html/
    └─ visual-audit-checklist.md
 ```
 
-### `SKILL.md`
+## 工作流摘要
 
-The core Codex skill. It defines when the skill should trigger and the workflow Codex should follow.
+Codex 使用这个 Skill 时，应该遵循下面的循环：
 
-### `agents/openai.yaml`
+1. 观察图片，写出简洁视觉分析
+2. 判断实现目标：静态 HTML 还是现有前端项目
+3. 把图片拆成布局区域和组件
+4. 提炼颜色、字体、间距、圆角、阴影等设计 token
+5. 处理关键图片资产
+6. 实现必要的交互状态
+7. 做响应式适配
+8. 截取桌面端和移动端浏览器截图
+9. 对照原图检查差异
+10. 继续调整，直到视觉上接近原图
 
-UI metadata for Codex skill lists and chips.
+## 还原标准
 
-### `references/visual-audit-checklist.md`
+可以接受：
 
-A checklist for analyzing the reference image before coding and reviewing browser screenshots after implementation.
+- 字体渲染有轻微差异
+- 图标有小幅替换
+- 非关键图片细节略有不同
+- 浏览器渲染造成的小差异
 
-### `references/html-css-rebuild-patterns.md`
+不能接受：
 
-Practical HTML/CSS/JS patterns for rebuilding layouts, tokens, interactions, and screenshot verification.
+- 主要区域缺失
+- 布局明显不同
+- 色彩氛围变了
+- 间距节奏混乱
+- 文本重叠或被裁切
+- 用无意义占位内容替代关键视觉
+- 没有做移动端和桌面端验收
 
-### `assets/starter/`
+## 截图验收示例
 
-A minimal static HTML starter that Codex can copy when no existing front-end project is present.
-
-## Workflow Summary
-
-When used correctly, Codex should follow this loop:
-
-1. Inspect the image and write a compact visual brief.
-2. Choose the target implementation: static HTML or existing app stack.
-3. Translate the image into components and layout regions.
-4. Build a design-token layer for colors, spacing, typography, radius, and shadows.
-5. Recreate meaningful assets or use provided assets.
-6. Implement simple inferred interactions.
-7. Make the result responsive.
-8. Capture browser screenshots at desktop and mobile sizes.
-9. Compare screenshots with the source image.
-10. Iterate until the implementation reads as the same design.
-
-## Fidelity Standard
-
-Acceptable differences:
-
-- slight font rendering differences
-- small icon substitutions
-- non-critical image content variation
-- minor browser rendering differences
-
-Not acceptable:
-
-- missing major sections
-- different layout
-- different color mood
-- broken spacing rhythm
-- overlapping text
-- generic placeholder content in meaningful areas
-- unverified responsive behavior
-
-## Verification Expectations
-
-Before claiming completion, Codex should run browser verification.
-
-A typical Playwright verification flow:
+典型 Playwright 验收流程：
 
 ```js
 const { chromium } = require('playwright');
@@ -182,25 +229,33 @@ await page.screenshot({ path: 'mobile-check.png', fullPage: true });
 await browser.close();
 ```
 
-If managed Playwright browsers are unavailable, Codex should use an installed Chromium or Edge executable when possible.
+如果 Playwright 自带浏览器不可用，可以改用系统里已经安装的 Chromium 或 Microsoft Edge。
 
-## Example Prompt
+## 推荐提示词
 
 ```text
-Use image2html to rebuild the attached image as a responsive HTML/CSS/JS prototype.
+使用 image2html，把这张图片还原成响应式 HTML/CSS/JS。
 
-Requirements:
-- match the layout, spacing, colors, and typography as closely as possible
-- implement obvious interactions such as tabs, toggles, sliders, or active states
-- verify with desktop and mobile browser screenshots
-- report any remaining fidelity gaps
+要求：
+- 尽量匹配原图的布局、间距、颜色和字体层级
+- 实现明显的交互，比如按钮、标签页、弹窗、滑杆或选中状态
+- 做桌面端和移动端截图验收
+- 最后说明还原差异和后续可优化点
 ```
 
-## Design Philosophy
+## English Quick Start
 
-The image is not a mood board. It is the acceptance target.
+Install:
 
-`image2html` pushes Codex to behave less like a generator and more like a careful front-end craftsperson: inspect, rebuild, verify, compare, and refine.
+```bash
+git clone https://github.com/atian8179/image2html.git ~/.codex/skills/image2html
+```
+
+Use:
+
+```text
+Use image2html to rebuild the attached image as a responsive HTML/CSS/JS prototype. Verify it with desktop and mobile browser screenshots.
+```
 
 ## License
 
